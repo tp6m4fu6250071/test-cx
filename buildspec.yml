@@ -11,7 +11,3 @@ phases:
       - printenv
       - echo $DEP_VERSION
       - echo TEST branch
-artifacts:
-  files:
-    - '**/*'
-
