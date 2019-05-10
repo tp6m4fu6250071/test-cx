@@ -1,0 +1,16 @@
+version: 0.2
+env:
+  parameter-store:
+    GOOS: "codebuild-goos"
+phases:
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the Go code...
+      - make -f Makefile
+      - printenv
+      - echo $DEP_VERSION
+artifacts:
+  files:
+    - '**/*'
+
