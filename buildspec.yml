@@ -10,6 +10,7 @@ phases:
       - make -f Makefile
       - printenv
       - echo $DEP_VERSION
+      - echo TEST branch
 artifacts:
   files:
     - '**/*'
