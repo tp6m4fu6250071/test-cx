@@ -12,4 +12,5 @@ phases:
       - echo $DEP_VERSION
       - echo TEST branch
 artifacts:
-  - files: '**/*'
+  files: 
+    - '**/*'
