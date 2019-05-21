@@ -1,0 +1,33 @@
+  
+version: 0.2
+
+env:
+  variables:
+    PACKAGE_DIRECTORY: src\packages
+    SOLUTION: src\TopEchelonContracting.sln
+    DOTNET_FRAMEWORK: 4.6.2
+phases:    
+  install:
+    commands:
+        - Set-ExecutionPolicy Bypass -Force
+        - $env:Path += ";C:\ProgramData\chocolatey\bin\"
+  pre_build:
+    commands:
+        - C:\ProgramData\chocolatey\choco install -y netfx-4.6.2-devpack
+  build:
+      commands:
+        - ./build.ps1
+        - Copy-Item "deploy/CodeDeploy/appspec.yml" -Destination "artifacts/"
+        - Copy-Item "deploy/CodeDeploy/appspecDev.yml" -Destination "artifacts/"
+        - Copy-Item "deploy/CodeDeploy/appspecScheduledTasks.yml" -Destination "artifacts/"
+        - Copy-Item "deploy/CodeDeploy/*" -Destination "artifacts/" -Recurse
+        - C:\Python37\python.exe -m pip install awscli
+        - Copy-Item "src/TecCorporate/WebDev.config" -Destination "artifacts/_PublishedWebsites/TecCorporate"
+        - Copy-Item "src/TecWare/WebDev.config" -Destination "artifacts/_PublishedWebsites/TecWare"
+  post_build:
+     commands:
+        - Remove-Item artifacts/appspec.yml
+        - Rename-Item -Path artifacts/appspecDev.yml -NewName appspec.yml
+        - Compress-Archive -Path artifacts\* -DestinationPath artifactsDev.zip        
+        - C:\Python37\Scripts\aws s3 cp artifactsDev.zip s3://cato-codedeploy/artifactsDev.zip
+       
