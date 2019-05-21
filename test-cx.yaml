@@ -1,0 +1,20 @@
+  
+version: 0.2
+
+env:
+  variables:
+    DOTNET_FRAMEWORK: 4.6.2
+phases:    
+  install:
+    commands:
+        - Set-ExecutionPolicy Bypass -Force
+  build:
+      commands:
+        - ./build.ps1
+        - Copy-Item "deploy/CodeDeploy/*" -Destination "artifacts/"
+        - C:\Python37\python.exe -m pip install awscli
+  post_build:
+     commands:
+        - Compress-Archive -Path artifacts\* -DestinationPath artifactsDev.zip        
+        - C:\Python37\Scripts\aws s3 cp artifactsDev.zip s3://cato-codedeploy/artifactsDev.zip
+       
