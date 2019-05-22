@@ -10,7 +10,6 @@ phases:
         - Set-ExecutionPolicy Bypass -Force
   build:
       commands:
-        - ./build.ps1
         - Copy-Item "deploy/CodeDeploy/*" -Destination "artifacts/"
         - C:\Python37\python.exe -m pip install awscli
   post_build:
